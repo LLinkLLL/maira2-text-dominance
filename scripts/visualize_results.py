@@ -16,7 +16,10 @@ def resolve_image(raw: str, csv_path: Path, image_root: Path | None) -> Path:
     for attempt in attempts:
         if attempt.is_file():
             return attempt
-    raise FileNotFoundError(raw)
+    raise FileNotFoundError(
+        f"Could not resolve image {raw!r}. If results and images are in different "
+        "directories, pass --image-root pointing to the transferred pilot directory."
+    )
 
 
 def main() -> None:
@@ -59,4 +62,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
