@@ -87,7 +87,7 @@ python scripts/visualize_results.py \
   --input-csv /mnt/HDD4/qili0786/maira2-results/pilot/results.csv \
   --output-dir /mnt/HDD4/qili0786/maira2-results/pilot/visualizations \
   --image-root /mnt/HDD4/qili0786/maira2-data/pilot \
-  --only-corrupted
+  --paired
 ```
 
 Primary outcomes are valid-output rate, incorrect-claim box rate, rejection/no-box
