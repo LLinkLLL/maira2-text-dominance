@@ -15,6 +15,8 @@ from PIL import Image
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoProcessor
 
+from image_utils import load_cxr_image
+
 
 RESULT_FIELDS = [
     "maira_input_claim", "maira_raw_output", "maira_parsed_text",
@@ -134,8 +136,7 @@ def main() -> None:
         row["maira_input_claim"] = claim
         try:
             image_path = resolve_image(row, args.input_csv, args.image_root)
-            with Image.open(image_path) as opened:
-                image = opened.convert("RGB")
+            image = load_cxr_image(image_path)
             width, height = image.size
             inputs = processor.format_and_preprocess_phrase_grounding_input(
                 frontal_image=image, phrase=claim, return_tensors="pt"

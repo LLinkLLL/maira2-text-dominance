@@ -71,6 +71,11 @@ boxes relative to the model crop, boxes corrected to the original image shape,
 and patient-side/vertical labels. MAIRA-2 provides no calibrated region
 confidence, so this project does not invent or compare a fake confidence score.
 
+PadChest-GR PNGs use high-bit-depth grayscale. All inference and visualization
+paths use the shared `image_utils.py` loader to map 16-bit intensities to 8-bit
+without the saturation caused by Pillow's direct `I` to `RGB` conversion. Results
+created with an older direct-conversion version must be rerun, not resumed.
+
 ## 4. Evaluate and visualize
 
 ```bash

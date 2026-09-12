@@ -9,6 +9,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+from image_utils import load_cxr_image
+
 
 def resolve_image(raw: str, csv_path: Path, image_root: Path | None) -> Path:
     path = Path(raw.replace("\\", "/"))
@@ -42,7 +44,7 @@ def main() -> None:
     cards, font = [], ImageFont.load_default()
     for index, row in enumerate(rows, 1):
         source = resolve_image(row["image_path"], args.input_csv, args.image_root)
-        image = Image.open(source).convert("RGB")
+        image = load_cxr_image(source)
         draw = ImageDraw.Draw(image)
         boxes = json.loads(row.get("maira_boxes_original_xyxy") or "[]")
         for box in boxes:

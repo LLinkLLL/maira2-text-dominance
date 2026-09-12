@@ -1,8 +1,8 @@
 transformers==4.51.3
 accelerate>=1.2,<2
 huggingface-hub>=0.30,<1
+numpy>=1.26,<3
 pillow>=10,<12
 protobuf>=5,<7
 sentencepiece>=0.2,<1
 tqdm>=4.66,<5
-

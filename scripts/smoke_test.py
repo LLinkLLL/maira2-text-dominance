@@ -10,6 +10,8 @@ import torch
 from PIL import Image
 from transformers import AutoModelForCausalLM, AutoProcessor
 
+from image_utils import normalize_cxr_image
+
 
 DEFAULT_IMAGE = "https://openi.nlm.nih.gov/imgs/512/145/145/CXR145_IM-0290-1001.png"
 DEFAULT_PHRASES = [
@@ -23,8 +25,9 @@ DEFAULT_PHRASES = [
 def load_image(path_or_url: str) -> Image.Image:
     if path_or_url.startswith(("http://", "https://")):
         request = Request(path_or_url, headers={"User-Agent": "MAIRA-2"})
-        return Image.open(io.BytesIO(urlopen(request).read())).convert("RGB")
-    return Image.open(path_or_url).convert("RGB")
+        return normalize_cxr_image(Image.open(io.BytesIO(urlopen(request).read())))
+    with Image.open(path_or_url) as image:
+        return normalize_cxr_image(image)
 
 
 def main() -> None:
@@ -67,4 +70,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
