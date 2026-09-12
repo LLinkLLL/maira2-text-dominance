@@ -1,0 +1,12 @@
+data/
+outputs/
+*.dcm
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
