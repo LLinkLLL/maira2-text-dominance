@@ -9,14 +9,23 @@ from pathlib import Path
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input-csv", required=True, type=Path)
+    parser.add_argument("--input-csv", required=True, type=Path, action="append")
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--max-pairs", type=int)
+    parser.add_argument("--max-pairs-per-type", type=int)
     args = parser.parse_args()
 
-    with args.input_csv.open("r", encoding="utf-8-sig", newline="") as handle:
-        rows = list(csv.DictReader(handle))
-        fields = list(rows[0]) if rows else []
+    rows, fields = [], []
+    for input_csv in args.input_csv:
+        with input_csv.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            batch = list(reader)
+            batch_fields = list(reader.fieldnames or [])
+        if not fields:
+            fields = batch_fields
+        elif batch_fields != fields:
+            raise ValueError(f"CSV columns differ in {input_csv}")
+        rows.extend(batch)
     if not rows or "image_path" not in fields:
         raise ValueError("Input CSV must contain at least one row and an image_path column")
 
@@ -30,6 +39,21 @@ def main() -> None:
                     continue
                 pair_ids.append(pair_id)
             if pair_id in pair_ids:
+                keep.append(row)
+        rows = keep
+
+    if args.max_pairs_per_type:
+        keep, accepted, seen = [], {}, set()
+        for row in rows:
+            negative_type = row.get("negative_type", "unknown")
+            pair_id = row.get("pair_id") or row.get("sample_id") or str(len(seen))
+            key = (negative_type, pair_id)
+            if key not in seen:
+                if accepted.get(negative_type, 0) >= args.max_pairs_per_type:
+                    continue
+                seen.add(key)
+                accepted[negative_type] = accepted.get(negative_type, 0) + 1
+            if key in seen:
                 keep.append(row)
         rows = keep
 
@@ -59,4 +83,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -41,8 +41,9 @@ rewrites image paths to be portable:
 ```powershell
 python scripts/prepare_subset.py `
   --input-csv D:\github_projects\GMPG\outputs\claim_corruption_evaluation\constructed_claim_pairs.csv `
+  --input-csv D:\github_projects\GMPG\outputs\finding_replacement_smoke\constructed_claim_pairs.csv `
   --output-dir D:\maira2-transfer\pilot `
-  --max-pairs 20
+  --max-pairs-per-type 5
 ```
 
 Transfer the resulting `pilot` directory to the server, for example under
@@ -96,4 +97,3 @@ generation outputs.
 4. Run the fixed shared PadChest-GR subset.
 5. Add mismatched-image and horizontal-flip controls to distinguish text following
    from genuine image conditioning.
-
